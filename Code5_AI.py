@@ -11,13 +11,16 @@ previous = 1
 while True:
     current = button.value()
 
-    if current == 0 and previous == 1:
+    if current != previous:
         sleep(0.05)
+        current = button.value()
 
-        if button.value() == 0:
-            led_state = not led_state
-            led.value(led_state)
-            print("On" if led_state else "Off")
+        if current != previous:
+            previous = current
 
-    previous = current
-    sleep(0.02)
+            if current == 0:
+                led_state = not led_state
+                led.value(led_state)
+                print("On" if led_state else "Off")
+
+    sleep(0.01)
