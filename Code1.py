@@ -1,7 +1,7 @@
 from machine import Pin
 from time import sleep
 
-led = Pin(2, Pin.OUT)
+led = Pin(18, Pin.OUT)
 button = Pin(4, Pin.IN, Pin.PULL_UP)
 led_state=0
 previous=1
@@ -13,3 +13,4 @@ while True:
         previous=current
         print("on")
         sleep(0.2)
+        previous=current
