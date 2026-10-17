@@ -1,11 +1,12 @@
-from machine import Pin
+from machine import Pin, ADC,PWM
 from time import sleep
-led=Pin(4, Pin.OUT)
-button=Pin(18, Pin.OUT, Pin.PULL_UP)
+
+sensor = ADC(Pin(34))
+sensor.init(atten=ADC.ATTN_11DB)
+led=PWM(Pin(4),freq=1000)
+
 while True:
-    value=button.value()
-    if value==0:
-        led.on()
-    else:
-        led.off()
-    sleep(1)
+    reading=sensor.read_u16()
+    print("ADC Reading", sensor.read_u16())
+    led.duty_u16(reading)
+    sleep(0.5)
