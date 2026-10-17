@@ -8,3 +8,47 @@ WHEEL
 LICENSE_typeshed
 VERSIONS
 .vscode
+# Secrets and local environment files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+secrets.json
+
+# Python-generated files
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Secrets and local environment files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+secrets.json
+
+# Python-generated files
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Secrets and local environment files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+secrets.json
+
+# Python-generated files
+__pycache__/
+*.py[cod]
+.venv/
+venv/
