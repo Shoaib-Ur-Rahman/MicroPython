@@ -1,8 +1,9 @@
 import time
+import random
 from machine import Pin, I2C
 
 # ==========================================
-# 1. EMBEDDED LCD DRIVER (No library files needed)
+# 1. EMBEDDED LCD DRIVER
 # ==========================================
 class I2cLcd:
     def __init__(self, i2c, i2c_addr, num_lines, num_columns):
@@ -16,7 +17,7 @@ class I2cLcd:
         try:
             self.i2c.writeto(self.i2c_addr, bytes([0x00]))
         except OSError:
-            print(f"Error: Could not find I2C device at address {hex(i2c_addr)}")
+            print(f"Error: Device missing at {hex(i2c_addr)}")
         time.sleep_ms(50)
         self._write_init_nibble(0x30)
         time.sleep_ms(5)
@@ -68,49 +69,59 @@ class I2cLcd:
                 self.write_data(ord(char))
 
 # ==========================================
-# 2. HARDWARE CONFIGURATION
+# 2. CONFIGURATION & SETUP
 # ==========================================
-LED_PIN = 2          # Onboard LED (GPIO 2)
-I2C_SDA_PIN = 21     # Default ESP32 SDA
-I2C_SCL_PIN = 22     # Default ESP32 SCL
-
-LCD_I2C_ADDR = 0x27  # Change to 0x3F if your screen stays blank
+LED_PIN = 2
+I2C_SDA_PIN = 21
+I2C_SCL_PIN = 22
+LCD_I2C_ADDR = 0x27
 LCD_ROWS = 2
 LCD_COLS = 16
 
-# ==========================================
-# 3. INITIALIZATION & MAIN LOOP
-# ==========================================
 led = Pin(LED_PIN, Pin.OUT)
 i2c = I2C(0, sda=Pin(I2C_SDA_PIN), scl=Pin(I2C_SCL_PIN), freq=400000)
-
-# Scan to see what I2C devices are actually connected
-print("Scanning I2C bus...")
-devices = i2c.scan()
-print("Found I2C addresses:", [hex(d) for d in devices])
-
 lcd = I2cLcd(i2c, LCD_I2C_ADDR, LCD_ROWS, LCD_COLS)
 
-print("Starting combined test...")
-lcd.clear()
-lcd.putstr("ESP32 Test\nBlinky Running!")
+# Pool of characters to pull chaos from
+CHAR_POOL = "$@#%&*+-/;<=>?[]^_{|}~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
-blink_count = 0
+# Generate random paths of symbols
+line1_stream = "".join(random.choice(CHAR_POOL) for _ in range(60))
+line2_stream = "".join(random.choice(CHAR_POOL) for _ in range(60))
 
+# Loop extensions
+line1_stream += line1_stream[:LCD_COLS]
+line2_stream += line2_stream[:LCD_COLS]
+
+frame = 0
+print("Running relaxed chaos slider...")
+
+# ==========================================
+# 3. MAIN LOOP
+# ==========================================
 try:
     while True:
-        led.value(not led.value()) # Toggle LED
+        # Toggle LED
+        led.value(not led.value())
+
+        # Slide Line 1 Left
+        start_idx_1 = frame % (len(line1_stream) - LCD_COLS)
+        chunk_1 = line1_stream[start_idx_1 : start_idx_1 + LCD_COLS]
+        lcd.move_to(0, 0)
+        lcd.putstr(chunk_1)
+
+        # Slide Line 2 Right (Opposite direction)
+        start_idx_2 = (len(line2_stream) - LCD_COLS - frame) % (len(line2_stream) - LCD_COLS)
+        chunk_2 = line2_stream[start_idx_2 : start_idx_2 + LCD_COLS]
+        lcd.move_to(0, 1)
+        lcd.putstr(chunk_2)
+
+        frame += 1
         
-        lcd.move_to(0, 1) # Move to second row
-        lcd.putstr("Count: {}     ".format(blink_count))
-        
-        if led.value():
-            blink_count += 1
-            
-        time.sleep(0.5)
+        # Slower sleep time to let pixels cool down and keep readability sharp
+        time.sleep(0.60) 
 
 except KeyboardInterrupt:
     led.off()
     lcd.clear()
-    lcd.putstr("Test Stopped")
-    print("Stopped by user.")
+    lcd.putstr("Chaos Paused")
