@@ -1,17 +1,15 @@
-
-from machine import Pin, SPI
+from machine import Pin
 import time
 
-spi = SPI(2, baudrate=100000, polarity=0, phase=0,
-          sck=Pin(18), mosi=Pin(23), miso=Pin(19))
-
-cs = Pin(5, Pin.OUT)
-cs.value(1)
+cs = Pin(5, Pin.OUT, value=1)
+miso = Pin(19, Pin.IN)
 
 time.sleep_ms(100)
 
-cs.value(0)
-response = spi.read(10, 0xFF)
-cs.value(1)
+print("MISO with CS HIGH:", miso.value())
 
-print("SPI response:", response)
+cs.value(0)
+time.sleep_ms(10)
+print("MISO with CS LOW:", miso.value())
+
+cs.value(1)
