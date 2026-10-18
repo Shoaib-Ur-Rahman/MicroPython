@@ -1,10 +1,17 @@
-import os
 
-print("Creating FAT filesystem...")
-vfs = os.VfsFat(sd)
+from machine import Pin, SPI
+import sdcard
 
-print("Mounting SD card...")
-os.mount(vfs, "/sd")
+spi = SPI(2, baudrate=100000, polarity=0, phase=0,
+          sck=Pin(18), mosi=Pin(23), miso=Pin(19))
 
-print("Mounted!")
-print("SD contents:", os.listdir("/sd"))
+sd = sdcard.SDCard(spi, Pin(5))
+
+print("Card initialized!")
+print("Card sectors:", sd.sectors)
+
+buf = bytearray(512)
+sd.readblocks(0, buf)
+
+print("Boot sector start:", buf[:16])
+print("Boot signature:", buf[510:512])
