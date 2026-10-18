@@ -1,3 +1,6 @@
-import os
+buf = bytearray(512)
 
-print("Unmount available:", hasattr(os, "umount"))
+sd.readblocks(2048, buf)
+
+print("Boot sector:", buf[:16])
+print("Signature:", buf[510:512])
