@@ -1,4 +1,9 @@
-from machine import Pin
+from machine import Pin, SPI
+import sdcard
 
-miso = Pin(19, Pin.IN)
-print("MISO disconnected:", miso.value())
+spi = SPI(2, baudrate=1000000, polarity=0, phase=0,
+          sck=Pin(18), mosi=Pin(23), miso=Pin(19))
+
+print("Starting SD initialization...")
+sd = sdcard.SDCard(spi, Pin(5))
+print("SD card initialized!")
