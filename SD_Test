@@ -1,9 +1,7 @@
 import os
 
-print("Root contents:", os.listdir("/"))
-print("Mount table:", os.mount if hasattr(os, "mount") else "unavailable")
-
-try:
-    print("Existing /sd contents:", os.listdir("/sd"))
-except Exception as e:
-    print("Reading /sd failed:", repr(e))
+print("SD initialized")
+print("Mounting...")
+os.mount(sd, "/sd")
+print("Mounted successfully")
+print(os.listdir("/sd"))
