@@ -1,9 +1,10 @@
-from machine import Pin, SPI
-import sdcard
+import os
 
-spi = SPI(2, baudrate=100000, polarity=0, phase=0,
-          sck=Pin(18), mosi=Pin(23), miso=Pin(19))
+print("Creating FAT filesystem...")
+vfs = os.VfsFat(sd)
 
-print("Starting SD initialization...")
-sd = sdcard.SDCard(spi, Pin(5))
-print("SD card initialized!")
+print("Mounting SD card...")
+os.mount(vfs, "/sd")
+
+print("Mounted!")
+print("SD contents:", os.listdir("/sd"))
