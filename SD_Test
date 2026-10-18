@@ -11,7 +11,7 @@ print("Card initialized!")
 print("Card sectors:", sd.sectors)
 
 buf = bytearray(512)
-sd.readblocks(0, buf)
+sd.readblocks(2048, buf)
 
-print("Boot sector start:", buf[:16])
+print("Filesystem boot sector:", buf[:16])
 print("Boot signature:", buf[510:512])
