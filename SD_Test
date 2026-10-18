@@ -1,30 +1,7 @@
-import os
-import sdcard
-from machine import Pin, SPI
-sd = sdcard.SDCard(spi, Pin(5))
-print("Card initialized:", sd.sectors, "sectors")
-class SDPartition:
-    def __init__(self, card, start, size):
-        self.card = card
-        self.start = start
-        self.size = size
+with open("/sd/test.txt", "w") as f:
+    f.write("Hello from ESP32!")
 
-    def readblocks(self, block_num, buf):
-        return self.card.readblocks(self.start + block_num, buf)
+with open("/sd/test.txt", "r") as f:
+    print("File contents:", f.read())
 
-    def writeblocks(self, block_num, buf):
-        return self.card.writeblocks(self.start + block_num, buf)
-
-    def ioctl(self, op, arg):
-        if op == 4:
-            return self.size
-        if op == 5:
-            return 512
-        return self.card.ioctl(op, arg)
-
-partition = SDPartition(sd, 2048, 3803103)
-vfs = os.VfsFat(partition)
-os.mount(vfs, "/sd")
-
-print("Mounted!")
 print("SD contents:", os.listdir("/sd"))
