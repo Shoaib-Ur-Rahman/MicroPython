@@ -1,17 +1,9 @@
+import os
 
-from machine import Pin, SPI
-import sdcard
+print("Root contents:", os.listdir("/"))
+print("Mount table:", os.mount if hasattr(os, "mount") else "unavailable")
 
-spi = SPI(2, baudrate=100000, polarity=0, phase=0,
-          sck=Pin(18), mosi=Pin(23), miso=Pin(19))
-
-sd = sdcard.SDCard(spi, Pin(5))
-
-print("Card initialized!")
-print("Card sectors:", sd.sectors)
-
-buf = bytearray(512)
-sd.readblocks(2048, buf)
-
-print("Filesystem boot sector:", buf[:16])
-print("Boot signature:", buf[510:512])
+try:
+    print("Existing /sd contents:", os.listdir("/sd"))
+except Exception as e:
+    print("Reading /sd failed:", repr(e))
