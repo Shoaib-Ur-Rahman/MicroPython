@@ -8,3 +8,5 @@ class SDPartition:
         self.sd=sd
         self.start_sector=start_sector
         self.size=size
+    def readblocks(self, block_num, buf):
+        
