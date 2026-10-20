@@ -6,6 +6,5 @@ sd=sdcard.SDCard(spi, Pin(5))
 class SDPartition:
     def __init__(self, sd, start_sector):
         self.sd=sd
-        self.start_sector=3805184
-        self.size=2048
-        
+        self.start_sector=start_sector
+        self.size=size
