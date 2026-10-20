@@ -8,4 +8,6 @@ print(os.listdir("/sd"))
 with open("/sd/status.txt", "r") as f:
     print(f.read())
 with open("/sd/status.txt", "a") as append:
-    append.write("/nWow this code works")
+    append.write("\nWow this code works")
+with open("/sd/status.txt") as f:
+    print(f.read)
