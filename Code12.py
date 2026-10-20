@@ -8,5 +8,3 @@ class SDPartition:
         self.sd=sd
         self.start_sector=start_sector
         self.size=size
-        start_sector=3805184
-        size=2048
