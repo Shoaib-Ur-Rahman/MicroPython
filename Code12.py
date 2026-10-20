@@ -10,3 +10,4 @@ class SDPartition:
         self.size=size
     def readblocks(self, block_num, buf):
         return self.sd.readblocks(self.start_sector + block_num, buf)
+    def writeblocks()
